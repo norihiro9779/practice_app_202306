@@ -5,11 +5,13 @@ services:
   # コンテナ名の指定
     container_name: example-rails_api-1
     build: ./rails_api
-    command: bundle exec rails s -p 3001 -b '0.0.0.0'
-    ports:
-      - "3001:3001"
+    command: bash -c "rm -f tmp/pids/server.pid && mkdir -p tmp/pids && bundle exec pumactl start"
+    # ports:
+    #   - "3001:3001"
     volumes:
       - ./rails_api:/myapp
+      - public-data:/myapp/public
+      - tmp-data:/myapp/tmp
   # 標準入出力デバイスを設定
     tty: true
     stdin_open: true
@@ -38,8 +40,15 @@ services:
     volumes:
     # Nginxのログ出力を永続化
       - ./nginx/log:/var/log/nginx
+      # Webサーバー側からアプリの/tmpと/publicを見れるようにするため永続化
+      - public-data:/myapp/public
+      - tmp-data:/myapp/tmp
     networks:
       - mynetwork
 
 networks:
   mynetwork:
+
+volumes:
+  public-data:
+  tmp-data:
