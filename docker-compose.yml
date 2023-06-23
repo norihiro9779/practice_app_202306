@@ -5,7 +5,7 @@ services:
   # コンテナ名の指定
     container_name: example-rails_api-1
     build: ./rails_api
-    command: bash -c "rm -f tmp/pids/server.pid && mkdir -p tmp/pids && bundle exec pumactl start"
+    command: bundle exec rails s
     # ports:
     #   - "3001:3001"
     volumes:
